@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 
+		★
+		AOP에 사용될 클래스가 자동 어노테이션 기법을 사용함을
+		미리 밝혀주는 태그
+	-->
+	<aop:aspectj-autoproxy />
+
+	<!-- 	AOP에 사용될 클래스가 <bean> 선언만 되어있다.
+			자동적으로 new만 되도록 해놓은 상태이다.
+	 -->
+	<bean id="exeTimeAspect" class="aspect.ExeTimeAspect2" />
+
+	<bean id="impeCal" class="chap07.ImpeCalculator">
+	</bean>
+
+	<bean id="recCal" class="chap07.RecCalculator">
+	</bean>
+
+</beans>

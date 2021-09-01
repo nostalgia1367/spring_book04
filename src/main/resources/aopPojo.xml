@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- xml 파일 선언 역시 aop와 관련되어 설정하여야 한다. 
+	참고
+		xml 파일은 아무렇게 만드는 것이 아니다.
+		그 안에 사용할 태그를 미리 밝혀 두어야 한다.
+		전문 용어로"DTD 선언, Schema 선언"이라고 표현한다.
+		
+		방법
+		<beans xmlns="DTD 혹은 Schema 선언"
+		.....
+		....
+		....
+		xsi:schemaLocation="실제 DTD, Schema 파일>
+
+		실무에서 가끔 태그를 만들었는데
+		그 태그가 에러가 나는 경우가 많다.
+		이 경우에는 100% 위쪽에 DTD 혹은 Schema 선언이 되지 않아서 그렇다.
+		
+	참고 DTD 혹은 Schema란?
+		태그의 형태, 순서, 의미를 정해 놓은 파일을 의미한다.
+		그러므로 DTD 혹은 Schema 선언을 한다느 의미
+		이 xml  파일 안에서 어떤 태그를 사용할 예정이다 라고 선언하는 것이다.
+		
+		
+	하나의 xml 파일에는 필요하다면 여러개의 DTD 혹은 Schema를 선언 할 수 있다.
+	xml은 그 xml 파일을 개발하는 누군가가 마음대로 태그 이름을 부여할 수 있다.
+	==>	이 말은 곧 태그의 이름이 중복될 수도 있다는 말이다.
+	이것을 구분하기 위해서 namespace라는 개념을 도입했다.
+	namespace는 각각의 DTD 혹은 Schema를 구분하기 위해
+	xml 파일을 사용하는 여러분이 부여하는 이름이다.
+	
+	부여방법	xmlns:적당한이름
+	
+	태그 사용방법	<namespace이름:태그이름 />	
+	
+	
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 공통 기능을 제공할 클래스를 빈<bean>으로 등록 -->
+	<bean id="exeTimeAspect" class="aspect.ExeTimeAspect" />
+
+	<!-- Aspect 설정: Advice를 어떤 Pointcut에 적용할 지 설정 -->
+	<!-- Aspect 클래스가 어느 시점에 실행을 해야할지(Pointcut)를 등록한다. -->
+	<aop:config>
+		<aop:aspect id="measureAspect" ref="exeTimeAspect">
+	<!-- 사용할 PointCut 함수를 등록한다. 
+		사용할 함수는 chap07 패키지 밑에 있는 모든 public 함수를
+		pointCut 함수로 등록하게 된다.
+	-->
+			<aop:pointcut id="publicMethod"
+				expression="execution(public * chap07..*(..))" />
+	<!-- 사용할 함수를 등록하는 부분 -->
+			<aop:around pointcut-ref="publicMethod" method="measure" />
+		</aop:aspect>
+	</aop:config>
+
+	<!-- 실제 사용할 클래스를 <bean>으로 등록한다. -->
+	<bean id="impeCal" class="chap07.ImpeCalculator">
+	</bean>
+
+	<bean id="recCal" class="chap07.RecCalculator">
+	</bean>
+
+</beans>
